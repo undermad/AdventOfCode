@@ -15,6 +15,7 @@ public class Day02 {
 
             String line = br.readLine();
             int result = 0;
+            int partTwoResult = 0;
 
             while (line != null) {
 
@@ -22,8 +23,11 @@ public class Day02 {
                 System.out.println("GAME ID: " + gameId);
 
                 int green = 0;
+                int maxGreen = 0;
                 int blue = 0;
+                int maxBlue = 0;
                 int red = 0;
+                int maxRed = 0;
                 boolean isGamePossible = true;
 
                 List<String> gameSets = extractGameSets(line);
@@ -38,17 +42,22 @@ public class Day02 {
                         red = 0;
                         blue = 0;
                         if (cube.contains("green")) {
-                            green += getIntFromCube(cube);
+                            green = getIntFromCube(cube);
                             System.out.println("GREEN: " + green);
                         } else if (cube.contains("red")) {
-                            red += getIntFromCube(cube);
+                            red = getIntFromCube(cube);
                             System.out.println("RED: " + red);
                         } else if (cube.contains("blue")) {
-                            blue += getIntFromCube(cube);
+                            blue = getIntFromCube(cube);
                             System.out.println("BLUE: " + blue);
                         }
 
-                        if(!validateGame(green,red,blue)){
+                        if (red > maxRed) maxRed = red;
+                        if (blue > maxBlue) maxBlue = blue;
+                        if (green > maxGreen) maxGreen = green;
+
+
+                        if (!validateGame(green, red, blue)) {
                             System.out.println("GAME WITH ID: " + gameId + " IS NOT POSSIBLE DUE TO THE SET NO: " + j);
                             isGamePossible = false;
                         }
@@ -60,6 +69,7 @@ public class Day02 {
                 if (isGamePossible) {
                     result += gameId;
                 }
+                partTwoResult += maxRed * maxBlue * maxGreen;
 
                 System.out.println("******************");
                 System.out.println("******************");
@@ -67,6 +77,7 @@ public class Day02 {
                 line = br.readLine();
             }
             System.out.println(result);
+            System.out.println(partTwoResult);
 
 
         } catch (IOException e) {
