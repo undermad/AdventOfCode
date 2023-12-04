@@ -9,7 +9,7 @@ public class Day01 {
 
         int lineNo = 1;
 
-        try (FileReader fr = new FileReader(".\\day01.txt");
+        try (FileReader fr = new FileReader(".\\input\\day01.txt");
              BufferedReader br = new BufferedReader(fr)) {
             String line = br.readLine();
 

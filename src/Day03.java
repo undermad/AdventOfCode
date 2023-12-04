@@ -30,6 +30,7 @@ public class Day03 {
 
             }
         }
+        // uncomment line 22 to get result
         System.out.println(result);
         System.out.println(gearRatioResult);
 
@@ -100,7 +101,7 @@ public class Day03 {
     }
 
     private static char[][] drawSchematic() {
-        try (FileReader fr = new FileReader(".\\day03.txt");
+        try (FileReader fr = new FileReader(".\\input\\day03.txt");
              BufferedReader br = new BufferedReader(fr)) {
 
             String line = br.readLine();
