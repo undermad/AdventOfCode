@@ -7,7 +7,6 @@ public class Day02 {
 
     public static void main(String[] args) {
 
-        List<String> colors = List.of("green", "blue", "red");
 
         try (FileReader fr = new FileReader(".\\day02.txt");
              BufferedReader br = new BufferedReader(fr)) {
