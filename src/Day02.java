@@ -86,15 +86,9 @@ public class Day02 {
 
     }
 
-    private static boolean validateGame(int green, int red, int blue) {
-        if (green > 13 || red > 12 || blue > 14) {
-            return false;
-        }
-        return true;
-    }
-
-    private static int getIntFromCube(String cube) {
-        return Integer.parseInt(cube.substring(0, 2).strip());
+    private static int extractGameId(String line) {
+        List<String> choppedLine = List.of(line.split(":"));
+        return Integer.parseInt(choppedLine.get(0).substring(5));
     }
 
     private static List<String> extractGameSets(String line) {
@@ -103,9 +97,15 @@ public class Day02 {
 
     }
 
-    private static int extractGameId(String line) {
-        List<String> choppedLine = List.of(line.split(":"));
-        return Integer.parseInt(choppedLine.get(0).substring(5));
+    private static int getIntFromCube(String cube) {
+        return Integer.parseInt(cube.substring(0, 2).strip());
+    }
+
+    private static boolean validateGame(int green, int red, int blue) {
+        if (green > 13 || red > 12 || blue > 14) {
+            return false;
+        }
+        return true;
     }
 
 }
