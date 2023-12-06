@@ -21,6 +21,18 @@ public class Day05 {
         }
     }
 
+    static class AlmanacNode {
+        long destination;
+        long source;
+        long range;
+
+        public AlmanacNode(long destination, long source, long range) {
+            this.destination = destination;
+            this.source = source;
+            this.range = range;
+        }
+    }
+
     private static long checkMapping(long seed, String line) {
         String[] destinationSourceRange = line.split(" ");
         long destination = Long.parseLong(destinationSourceRange[0]);
@@ -46,47 +58,32 @@ public class Day05 {
         return seed;
     }
 
+    private static long checkMapping(long seed, long dest, long src, long rng) {
+        if (src + rng > seed && seed > src) {
+            long offset = dest - src;
+            return seed + offset;
+        }
+        return seed;
+    }
+
     public static void main(String[] args) {
         List<Long> seeds = extractSeeds();
         List<Interval> intervals = getIntervals(seeds);
         Stack<Interval> seedsTrueIntervals = mergeIntervals(intervals);
-        List<List<Interval>> sections = extractMapping();
+        List<List<AlmanacNode>> almanacMap = extractMapping();
 
         for (Interval interval :
                 seedsTrueIntervals) {
             System.out.println("START: " + interval.start + " END: " + interval.end);
         }
 
-//        long smallestLocation = Long.MAX_VALUE;
-//        for (Interval interval :
-//                seedsTrueIntervals) {
-//            System.out.println("STARTING INTERVAL: " + interval.start);
-//
-//            for (long a = interval.start; a < interval.end; a++) {
-//                long currentSeed = a;
-//
-//
-//                for (int i = 0; i < sections.size(); i++) {
-//                    for (int j = 0; j < sections.get(i).size(); j++) {
-//
-//                        long newSeed = checkMapping(currentSeed, sections.get(i).get(j));
-//                        if (newSeed != currentSeed) {
-//                            currentSeed = newSeed;
-//                            break;
-//                        }
-//                    }
-//                }
-//
-//                if (currentSeed < smallestLocation) smallestLocation = currentSeed;
-//            }
-//        }
 
 
         long smallestLocation = Long.MAX_VALUE;
         for (Interval interval : seedsTrueIntervals) {
             System.out.println("STARTING INTERVAL: " + interval.start);
             for (long i = interval.start; i < interval.end; i++) {
-                long result = getFinalSeedLocation(i);
+                long result = getFinalSeedLocation(i, almanacMap);
                 if (result < smallestLocation) {
                     smallestLocation = result;
                 }
@@ -108,15 +105,15 @@ public class Day05 {
 
     }
 
-    private static List<List<Interval>> extractMapping() {
+    private static List<List<AlmanacNode>> extractMapping() {
 
-        List<List<Interval>> sections = new ArrayList<>();
+        List<List<AlmanacNode>> sections = new ArrayList<>();
         try (FileReader fr = new FileReader(".\\input\\day05.txt");
              BufferedReader br = new BufferedReader(fr)) {
             String line = br.readLine();
             line = br.readLine();
 
-            List<Interval> section = new ArrayList<>();
+            List<AlmanacNode> section = new ArrayList<>();
             while (line != null) {
                 if (line.isEmpty()) {
                     line = skipEmptyLine(br);
@@ -125,9 +122,9 @@ public class Day05 {
                 }
 
                 String[] destinationSourceRange = line.split(" ");
-                section.add(new Interval(Long.parseLong(destinationSourceRange[1]),
-                        Long.parseLong(destinationSourceRange[2]),
-                        Long.parseLong(destinationSourceRange[0])));
+                section.add(new AlmanacNode(Long.parseLong(destinationSourceRange[0]),
+                        Long.parseLong(destinationSourceRange[1]),
+                        Long.parseLong(destinationSourceRange[2])));
 
 
                 line = br.readLine();
@@ -165,6 +162,29 @@ public class Day05 {
             }
         }
         return stack;
+    }
+
+    private static long getFinalSeedLocation(Long seed, List<List<AlmanacNode>> almanacMap) {
+        long currentSeed = seed;
+
+        for (int i = 0; i < almanacMap.size(); i++) {
+
+            int j = 0;
+            while (j < almanacMap.get(i).size()) {
+
+                long newSeed = checkMapping(
+                        currentSeed,
+                        almanacMap.get(i).get(j).destination,
+                        almanacMap.get(i).get(j).source,
+                        almanacMap.get(i).get(j).range);
+
+                if (newSeed != currentSeed) {
+                    currentSeed = newSeed;
+                    break;
+                }
+            }
+        }
+        return currentSeed;
     }
 
     private static long getFinalSeedLocation(Long seed) {
