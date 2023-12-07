@@ -17,13 +17,17 @@ public class Day07 {
             Map<Character, Integer> handType = new HashMap<>();
             char[] figures = hand.toCharArray();
             int score = 0;
+            int jokers = 0;
             for (int i = 0; i < figures.length; i++) {
                 Integer current = handType.get(figures[i]);
-                if (current != null) {
+                if (figures[i] == 'J') {
+                    jokers++;
+                } else if (current != null) {
                     handType.put(figures[i], current + 1);
-                    score = addScore(current, score);
+                    score = addScorePartOne(current, score);
                 } else handType.put(figures[i], 1);
             }
+            score = addJokers(score, jokers);
             addToHandTypeGroup(hand, score, handTypes);
 
             handType.forEach((key, val) -> System.out.print("Key: " + key + " Val: " + val + " |||"));
@@ -92,7 +96,7 @@ public class Day07 {
         return sb.toString();
     }
 
-    private static Map<Character, Character> getAlphabetToWinningOrder() {
+    private static Map<Character, Character> getAlphabetToWinningOrderPartOne() {
         Map<Character, Character> alphabetToWinningOrder = new HashMap<>();
         alphabetToWinningOrder.put('a', 'A');
         alphabetToWinningOrder.put('b', 'K');
@@ -110,7 +114,25 @@ public class Day07 {
         return alphabetToWinningOrder;
     }
 
-    private static Map<Character, Character> getWinningOrderToAlphabet() {
+    private static Map<Character, Character> getAlphabetToWinningOrder() {
+        Map<Character, Character> alphabetToWinningOrder = new HashMap<>();
+        alphabetToWinningOrder.put('a', 'A');
+        alphabetToWinningOrder.put('b', 'K');
+        alphabetToWinningOrder.put('c', 'Q');
+        alphabetToWinningOrder.put('d', 'T');
+        alphabetToWinningOrder.put('e', '9');
+        alphabetToWinningOrder.put('f', '8');
+        alphabetToWinningOrder.put('g', '7');
+        alphabetToWinningOrder.put('h', '6');
+        alphabetToWinningOrder.put('i', '5');
+        alphabetToWinningOrder.put('j', '4');
+        alphabetToWinningOrder.put('k', '3');
+        alphabetToWinningOrder.put('l', '2');
+        alphabetToWinningOrder.put('m', 'J');
+        return alphabetToWinningOrder;
+    }
+
+    private static Map<Character, Character> getWinningOrderToAlphabetPartOne() {
         Map<Character, Character> winningOrderToAlphabet = new HashMap<>();
         winningOrderToAlphabet.put('A', 'a');
         winningOrderToAlphabet.put('K', 'b');
@@ -125,6 +147,24 @@ public class Day07 {
         winningOrderToAlphabet.put('4', 'k');
         winningOrderToAlphabet.put('3', 'l');
         winningOrderToAlphabet.put('2', 'm');
+        return winningOrderToAlphabet;
+    }
+
+    private static Map<Character, Character> getWinningOrderToAlphabet() {
+        Map<Character, Character> winningOrderToAlphabet = new HashMap<>();
+        winningOrderToAlphabet.put('A', 'a');
+        winningOrderToAlphabet.put('K', 'b');
+        winningOrderToAlphabet.put('Q', 'c');
+        winningOrderToAlphabet.put('T', 'd');
+        winningOrderToAlphabet.put('9', 'e');
+        winningOrderToAlphabet.put('8', 'f');
+        winningOrderToAlphabet.put('7', 'g');
+        winningOrderToAlphabet.put('6', 'h');
+        winningOrderToAlphabet.put('5', 'i');
+        winningOrderToAlphabet.put('4', 'j');
+        winningOrderToAlphabet.put('3', 'k');
+        winningOrderToAlphabet.put('2', 'l');
+        winningOrderToAlphabet.put('J', 'm');
         return winningOrderToAlphabet;
     }
 
@@ -147,7 +187,7 @@ public class Day07 {
         else if (score > 500) handTypes.get(6).add(hand);
     }
 
-    private static int addScore(Integer current, int score) {
+    private static int addScorePartOne(Integer current, int score) {
         if (current == 1 && score == 25) score += 50;  // full = 75score
         else if (current == 1 && score == 5) score += 5; // two pairs = 10score
         else if (current == 1 && score == 0) score += 5; // one pair  = 5score
@@ -156,6 +196,22 @@ public class Day07 {
         else if (current == 3) score += 100; // four of kind = 125score
         else if (current == 4) score += 500; // five of kind = 500+
         return score;
+    }
+
+    private static int addJokers(int score, int jokers) {
+        if (score == 0 && jokers == 5) return 999;
+        else if (score == 0 && jokers == 4) return 999;
+        else if (score == 0 && jokers == 3) return 125;
+        else if (score == 0 && jokers == 2) return 25;
+        else if(score == 0 && jokers == 1) return 5;
+        else if (score == 5 && jokers == 3) return 999;
+        else if (score == 5 && jokers == 2) return 125;
+        else if (score == 5 && jokers == 1) return 25;
+        else if (score == 10 && jokers == 1) return 60;
+        else if (score == 25 && jokers == 2) return 999;
+        else if (score == 25 && jokers == 1) return 125;
+        else if (score == 125 && jokers == 1) return 999;
+        else return score;
     }
 
     private static Map<String, Integer> extractHandToBidMap() {
