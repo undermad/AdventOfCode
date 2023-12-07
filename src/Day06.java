@@ -5,12 +5,13 @@ public class Day06 {
     public static void main(String[] args) {
 
 
+        //part 1
         Map<Integer, Integer> timeToRecord = Map.of(
                 63, 411,
                 78, 1274,
                 94, 2047,
                 68, 1035);
-        long result = 1;
+        long resultPartOne = 1;
 
         for (Integer t :
                 timeToRecord.keySet()) {
@@ -28,10 +29,33 @@ public class Day06 {
                 }
             }
 
-            result *= winningOptions;
+            resultPartOne *= winningOptions;
         }
 
-        System.out.println(result);
+        System.out.println(resultPartOne);
 
+
+        //part 2
+
+        long resultPartTwo = 1;
+
+
+        long time = 63789468;
+        long record = 411127420471035L;
+        int winningOptions = 0;
+
+        for (long i = time; i >= 0; i--) {
+
+            long timeToHold = time - i;
+            long timeForTravel = time - timeToHold;
+            if (timeForTravel * timeToHold > record) {
+                winningOptions++;
+            }
+        }
+
+        resultPartTwo *= winningOptions;
+        System.out.println(resultPartTwo);
     }
+
 }
+
