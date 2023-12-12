@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,11 +54,11 @@ public class Day10 {
                     Tile currentTile = maze[row][col];
 
                     if (isIn && !currentTile.isBorder) innerTiles++;
-                    else if (isIn && currentTile.isBorder && currentTile.pipeType == '|')
+                    else if (isIn && currentTile.pipeType == '|')
                         isIn = false;
-                    else if (isIn && currentTile.isBorder && currentTile.pipeType == '7' && currentTile.facingDirection == FacingDirection.WEST)
+                    else if (isIn && currentTile.pipeType == '7' && currentTile.facingDirection == FacingDirection.WEST)
                         isIn = false;
-                    else if(isIn && currentTile.isBorder && currentTile.pipeType == 'J' && currentTile.facingDirection == FacingDirection.NORTH)
+                    else if(isIn && currentTile.pipeType == 'J' && currentTile.facingDirection == FacingDirection.NORTH)
                         isIn = false;
                     else if (!isIn && currentTile.isBorder) isIn = true;
                 }
