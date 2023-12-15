@@ -14,6 +14,7 @@ public class Day11 {
         Space space = new Space(input);
         space.printSpace();
         space.adjustGalaxiesPositions();
+        space.galaxies.forEach(glaxy -> System.out.println(glaxy.x + " " + glaxy.y));
 
         System.out.println(space.calculateAnswer());
 
@@ -94,7 +95,7 @@ public class Day11 {
         private void adjustGalaxiesAfterColumn(int col) {
             for (int c = col + 1; c < spaceMap[0].length; c++) {
                 for (int r = 0; r < spaceMap.length; r++) {
-                    spaceMap[r][c].x++;
+                    spaceMap[r][c].x = spaceMap[r][c].x + 1000000 - 1;
                 }
             }
         }
@@ -102,7 +103,7 @@ public class Day11 {
         private void adjustGalaxiesAfterRow(int row) {
             for (int r = row + 1; r < spaceMap.length; r++) {
                 for (int c = 0; c < spaceMap[r].length; c++) {
-                    spaceMap[r][c].y++;
+                    spaceMap[r][c].y = spaceMap[r][c].y + 1000000 - 1;
                 }
             }
         }
