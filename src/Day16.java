@@ -18,6 +18,37 @@ public class Day16 {
         System.out.println("Part 1 answer: " + panel.countEnergizedChunks());
 
 
+        int largestNumberOfEnergizedChunks = 0;
+        for (int i = 0; i < panel.grid[0].length; i++) {
+            Panel p = new Panel(input);
+            Beam b = new Beam(FacingDirection.DOWN, i, 0);
+            p.sendBeam(b);
+            int a = p.countEnergizedChunks();
+            largestNumberOfEnergizedChunks = Math.max(a, largestNumberOfEnergizedChunks);
+            Panel p2 = new Panel(input);
+            Beam b2 = new Beam(FacingDirection.TOP, i, 0);
+            p2.sendBeam(b2);
+            int a2 = p2.countEnergizedChunks();
+            largestNumberOfEnergizedChunks = Math.max(a2, largestNumberOfEnergizedChunks);
+        }
+
+
+
+        for (int i = 0; i < panel.grid.length; i++) {
+            Panel p = new Panel(input);
+            Beam b = new Beam(FacingDirection.RIGHT, 0, i);
+            p.sendBeam(b);
+            int a = p.countEnergizedChunks();
+            largestNumberOfEnergizedChunks = Math.max(a, largestNumberOfEnergizedChunks);
+
+            Panel p2 = new Panel(input);
+            Beam b2 = new Beam(FacingDirection.LEFT, panel.grid[0].length - 1, i);
+            p2.sendBeam(b2);
+            int a2 = p2.countEnergizedChunks();
+            largestNumberOfEnergizedChunks = Math.max(a2, largestNumberOfEnergizedChunks);
+        }
+
+        System.out.println("Part 2 answer: " + largestNumberOfEnergizedChunks);
 
 
     }
@@ -49,6 +80,7 @@ public class Day16 {
                 System.out.println();
             }
         }
+
         public int countEnergizedChunks() {
             int numberOfEnergizedTiles = 0;
             for (int row = 0; row < grid.length; row++) {
@@ -85,8 +117,9 @@ public class Day16 {
 
         private void dealWithDash(Beam beam) {
             if (beam.facingDirection == FacingDirection.TOP || beam.facingDirection == FacingDirection.DOWN) {
-                if(grid[beam.y][beam.x].energizedWithDirection.contains(FacingDirection.LEFT) || grid[beam.y][beam.x].energizedWithDirection.contains(FacingDirection.RIGHT)) return;
-                else{
+                if (grid[beam.y][beam.x].energizedWithDirection.contains(FacingDirection.LEFT) || grid[beam.y][beam.x].energizedWithDirection.contains(FacingDirection.RIGHT))
+                    return;
+                else {
                     grid[beam.y][beam.x].energizedWithDirection.add(FacingDirection.RIGHT);
                     grid[beam.y][beam.x].energizedWithDirection.add(FacingDirection.LEFT);
                 }
@@ -101,8 +134,9 @@ public class Day16 {
 
         private void dealWithVerticalDash(Beam beam) {
             if (beam.facingDirection == FacingDirection.LEFT || beam.facingDirection == FacingDirection.RIGHT) {
-                if(grid[beam.y][beam.x].energizedWithDirection.contains(FacingDirection.TOP) || grid[beam.y][beam.x].energizedWithDirection.contains(FacingDirection.DOWN)) return;
-                else{
+                if (grid[beam.y][beam.x].energizedWithDirection.contains(FacingDirection.TOP) || grid[beam.y][beam.x].energizedWithDirection.contains(FacingDirection.DOWN))
+                    return;
+                else {
                     grid[beam.y][beam.x].energizedWithDirection.add(FacingDirection.TOP);
                     grid[beam.y][beam.x].energizedWithDirection.add(FacingDirection.DOWN);
 
