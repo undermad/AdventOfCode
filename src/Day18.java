@@ -9,11 +9,11 @@ import java.util.Stack;
 public class Day18 {
     public static void main(String[] args) throws IOException {
         List<String> lines = Files.readAllLines(Path.of(".\\input\\day18.txt"));
-        Map map = new Map(lines);
-        map.createBorders();
-        map.digger.floodFill();
-        map.print();
-        System.out.println("Part 1 solution: " + map.calculateLavaHoles());
+//        Map map = new Map(lines);
+//        map.createBorders();
+//        map.digger.floodFill();
+//        map.print();
+//        System.out.println("Part 2 solution: " + map.calculateLavaHoles() * 100);
     }
 
 
@@ -24,7 +24,7 @@ public class Day18 {
 
         public Map(List<String> input) {
             this.input = input;
-            this.map = new Tile[370][500];
+            this.map = new Tile[100000][100000];
 
             for (int i = 0; i < map.length; i++) {
                 for (int j = 0; j < map[i].length; j++) {
@@ -38,11 +38,22 @@ public class Day18 {
 
             for (String line : input) {
                 String[] choppedLine = line.split(" ");
-                String direction = choppedLine[0];
-                int length = Integer.parseInt(choppedLine[1]);
-                String hexColour = choppedLine[2].substring(1, choppedLine[2].length() - 1);
+                String hexNumber = choppedLine[2].substring(2, choppedLine[2].length() - 2);
+                int directionNumber = Integer.parseInt(choppedLine[2].substring(choppedLine[2].length() - 2, choppedLine[2].length() - 1));
+                int length = Integer.parseInt(hexNumber, 16);
+                System.out.println(length);
+                String direction = "";
+                if (directionNumber == 0) {
+                    direction = "R";
+                } else if (directionNumber == 1) {
+                    direction = "D";
+                } else if (directionNumber == 2) {
+                    direction = "L";
+                } else if (directionNumber == 3) {
+                    direction = "U";
+                }
 
-                digger.dig(direction, length, hexColour);
+                digger.dig(direction, length, "#500100");
             }
 
 
@@ -57,11 +68,11 @@ public class Day18 {
             }
         }
 
-        public long calculateLavaHoles(){
+        public long calculateLavaHoles() {
             long holes = 0;
             for (int i = 0; i < map.length; i++) {
                 for (int j = 0; j < map[i].length; j++) {
-                    if(map[i][j].type == '#')
+                    if (map[i][j].type == '#')
                         holes++;
                 }
             }
@@ -79,12 +90,12 @@ public class Day18 {
         Tile[][] map;
 
         public Digger(Tile[][] map) {
-//            this.x = map[0].length / 2;
-//            this.y = map.length / 2;
+            this.x = map[0].length / 2;
+            this.y = map.length / 2;
 
 
-            this.x = 50;
-            this.y = (map.length / 2) + 50;
+//            this.x = 50;
+//            this.y = (map.length / 2) + 50;
             this.inX = x + 20;
             this.inY = y + 11;
             this.map = map;
@@ -108,8 +119,8 @@ public class Day18 {
                 Coordinate c = queue.pop();
 
                 List<Coordinate> neighbours = getNeighbours(c, height, width, map);
-                for(Coordinate coordinate : neighbours){
-                    if(visited[coordinate.y][coordinate.x]) return;
+                for (Coordinate coordinate : neighbours) {
+                    if (visited[coordinate.y][coordinate.x]) return;
                     map[coordinate.y][coordinate.x].type = '#';
                     queue.add(coordinate);
                     visited[coordinate.y][coordinate.x] = true;
@@ -126,8 +137,8 @@ public class Day18 {
             for (int i = 0; i < rows.length; i++) {
                 int neighbourRow = node.y + rows[i];
                 int neighbourCol = node.x + columns[i];
-                if(0 <= neighbourCol && neighbourCol < width && 0 <= neighbourRow && neighbourRow < height) {
-                    if(map[neighbourRow][neighbourCol].type == '.'){
+                if (0 <= neighbourCol && neighbourCol < width && 0 <= neighbourRow && neighbourRow < height) {
+                    if (map[neighbourRow][neighbourCol].type == '.') {
                         neighbours.add(new Coordinate(neighbourCol, neighbourRow));
                     }
                 }
@@ -165,6 +176,7 @@ public class Day18 {
             }
         }
     }
+
 
     public static class Coordinate {
         int x;
