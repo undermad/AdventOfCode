@@ -69,12 +69,28 @@ public class Day22 {
 
     public static void main(String[] args) throws IOException {
 
+
         BrickTower brickTower = new BrickTower(parseInput());
         brickTower.addAllBricks();
         brickTower.letBricksFall();
         brickTower.addBrickBases();
         System.out.println("Part 1 answer: " + brickTower.safeToDisintegrateBricks());
 
+        int result = 0;
+        for (int i = 0; i < 974; i++) {
+            BrickTower p2brickTower = new BrickTower(parseInput());
+            p2brickTower.addAllBricks();
+            p2brickTower.letBricksFall();
+            p2brickTower.addBrickBases();
+            List<Brick> dangerousBricks = brickTower.dangerousBricks();
+            Brick brick = dangerousBricks.get(i);
+            for(Cube cube : brick.cubes){
+                p2brickTower.grid[cube.coordinates.x][cube.coordinates.y][cube.coordinates.z] = null;
+            }
+            result += p2brickTower.calculateFallingBricks();
+        }
+
+        System.out.println("Part 2 answer: " + result);
     }
 
     public static class BrickTower {
@@ -97,7 +113,33 @@ public class Day22 {
                     }
                 }
             }
+        }
 
+        public int calculateFallingBricks() {
+            int result = 0;
+            for (int z = 1; z < grid[0][0].length; z++) {
+                for (int x = 0; x < grid.length; x++) {
+                    for (int y = 0; y < grid[x].length; y++) {
+                        if (grid[x][y][z] != null) {
+                            if (grid[x][y][z].brick.canFallDown(grid)) {
+                                result++;
+                            }
+                            grid[x][y][z].brick.fallDown(grid);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        public List<Brick> dangerousBricks() {
+            List<Brick> dangerousBricks = new ArrayList<>();
+            for (Brick brick : bricks) {
+                if (!brick.checkIfCanBeRemoved()) {
+                    dangerousBricks.add(brick);
+                }
+            }
+            return dangerousBricks;
         }
 
         public void addBrickBases() {
@@ -136,8 +178,6 @@ public class Day22 {
 
             return result;
         }
-
-
     }
 
     public static class Cube {
