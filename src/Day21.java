@@ -97,7 +97,7 @@ public class Day21 {
 
                 if (neighbourX >= 0 && neighbourY >= 0 && neighbourX < map[0].length && neighbourY < map.length) {
                     Tile t = map[neighbourY][neighbourX];
-                    if (!t.visited && t.type == '.') {
+                    if (t.type == '.') {
                         t.step = this.step + 1;
                         neighbours.add(t);
                     }
