@@ -65,7 +65,7 @@ public class Day20 {
 
         Map<String, Module> modules = parseModules();
         Headquarter hq = new Headquarter(modules);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 999; i++) {
             hq.pressButton();
         }
         System.out.println("Part 1 answer: " + hq.multiplyHighByLow());
@@ -84,20 +84,17 @@ public class Day20 {
         }
 
         void pressButton() {
-            ArrayDeque<Pulse> queue = new ArrayDeque<>();
             int low = 1;
             int high = 0;
 
             List<Pulse> pulses = modules.get("broadcaster").receivePulse(new Pulse(Signal.LOW, null, null));
-            if (!pulses.isEmpty()) {
-                low+= pulses.size()- 1;
-                queue.addAll(pulses);
-            }
+                low+= 4;
+            ArrayDeque<Pulse> queue = new ArrayDeque<>(pulses);
             while (!queue.isEmpty()) {
                 Pulse pulse = queue.poll();
-                if(pulse.receiver == null) continue;
                 if (pulse.signal == Signal.HIGH) high++;
                 if (pulse.signal == Signal.LOW) low++;
+                if(pulse.receiver == null) continue;
                 List<Pulse> newPulses = pulse.receiver.receivePulse(pulse);
                 if (!newPulses.isEmpty()) {
                     queue.addAll(newPulses);
@@ -162,26 +159,19 @@ public class Day20 {
         @Override
         List<Pulse> receivePulse(Pulse pulse) {
             List<Pulse> signals = new ArrayList<>();
-            switch (pulse.signal) {
-                case Signal.LOW -> {
-                    if (isOn) {
-                        toggle(true);
-                        for (Module destination : destinations)
-                            signals.add(new Pulse(Signal.LOW, this, destination));
-                    } else {
-                        toggle(false);
-                        for (Module destination : destinations) {
-                            signals.add(new Pulse(Signal.HIGH, this, destination));
-                        }
+            if (pulse.signal == Signal.LOW) {
+                if (isOn) {
+                    isOn = false;
+                    for (Module destination : destinations)
+                        signals.add(new Pulse(Signal.LOW, this, destination));
+                } else {
+                    isOn = true;
+                    for (Module destination : destinations) {
+                        signals.add(new Pulse(Signal.HIGH, this, destination));
                     }
                 }
-
             }
             return signals;
-        }
-
-        private void toggle(boolean bol) {
-            isOn = !bol;
         }
     }
 
@@ -198,10 +188,10 @@ public class Day20 {
             List<Pulse> signals = new ArrayList<>();
             inputs.put(pulse.sender, pulse.signal);
             boolean isAllHigh = true;
-            for (Map.Entry<Module, Signal> entry : inputs.entrySet()) {
-                Signal signal = entry.getValue();
-                if (signal == Signal.LOW)
-                    isAllHigh = false;
+            Set<Module> keys = inputs.keySet();
+            for (Module key : keys) {
+                Signal signal = inputs.get(key);
+                if(signal == Signal.LOW) isAllHigh = false;
             }
 
             if (isAllHigh) {
